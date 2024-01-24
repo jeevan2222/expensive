@@ -2,12 +2,12 @@ const express = require("express");
 const app = express();
 const port = 4321;
 
-const cors = require("cors");
-
-// app.use("cors");
-
 app.get("/", (req, res) => {
   res.send("Hello im from SPACE");
+});
+
+app.get("/data", (req, res) => {
+  res.send("Hello im from Mars");
 });
 
 app.listen(port, () => {
