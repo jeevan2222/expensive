@@ -12,14 +12,14 @@ console.log(
   process.env.PASSWORD
 );
 // Synchronize Sequelize models with the database
-// sequelize
-//   .sync()
-//   .then(() => {
-//     console.log("Database synchronized");
-//   })
-//   .catch((err) => {
-//     console.error("Error synchronizing database:", err);
-//   });
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Database synchronized");
+  })
+  .catch((err) => {
+    console.error("Error synchronizing database:", err);
+  });
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
