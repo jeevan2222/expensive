@@ -1,13 +1,19 @@
 const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(
-  process.env.DATABASE_NAME,
-  process.env.DATABASE_USER,
-  process.env.DATABASE_PASSWORD,
+  "jeevan",
+  "jeevan_user",
+  "t8eeDDiVagSvT9ccBfHhI9ix8PPjsoAv",
   {
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT || 5432,
+    host: "cmomniq1hbls73bn1etg-a.oregon-postgres.render.com",
+    port: 5432,
     dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false, // This line is crucial for Render
+      },
+    },
   }
 );
 
