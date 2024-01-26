@@ -13,7 +13,7 @@ const sendEmailVerificationCode = (email, otp, next) => {
     from: "jeevantest64@gmail.com", // sender address
     to: email, // list of receivers
     subject: "Email Verification Code", // Subject line
-    html: `<p>Your html here${otp} </p>`, // plain text body
+    html: `<p>Your OTP   <b>${otp} </b></p>`, // plain text body
   };
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) console.log(err);
