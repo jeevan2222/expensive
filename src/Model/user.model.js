@@ -15,10 +15,43 @@ const createUser = async (req, res) => {
     email: email,
     password: password,
     otp: otp,
+    isemailverified: false,
   });
 
   //   console.log(jane);
   res.send(jane);
 };
-
-module.exports = createUser;
+const verifyEmail = async (req, res) => {
+  const { email, otp } = req.body;
+  const project = await User.findOne({ where: { email: email } });
+  if (project === null) {
+    res.send({
+      status: 401,
+      error: true,
+      message: "send valid mail id",
+    });
+  } else {
+    if (project.otp == otp) {
+      await User.update(
+        { isemailverified: true, otp: null },
+        {
+          where: {
+            email: email,
+          },
+        }
+      );
+      res.send({
+        status: 201,
+        error: false,
+        message: "email  verification done",
+      });
+    } else {
+      res.send({
+        status: 403,
+        error: true,
+        message: "otp not matched",
+      });
+    }
+  }
+};
+module.exports = { createUser, verifyEmail };

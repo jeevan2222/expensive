@@ -8,13 +8,13 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const sequelize = require("../src/dbconnection/db");
-const createUser = require("./Model/user.model");
+const { verifyEmail, createUser } = require("./Model/user.model");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.get("/create", createUser);
-
+app.post("/create", createUser);
+app.get("/verificationEmail", verifyEmail);
 app.get("/", (req, res) => {
   res.render("home");
 });

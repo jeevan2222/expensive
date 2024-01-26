@@ -6,6 +6,10 @@ const User = sequelize.define("user", {
   email: DataTypes.TEXT,
   password: DataTypes.TEXT,
   otp: DataTypes.TEXT,
+  isemailverified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 // (async () => {
