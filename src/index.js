@@ -17,7 +17,7 @@ app.set("views", path.join(__dirname, "views"));
 
 app.post("/create", createUser);
 app.get("/verificationEmail", verifyEmail);
-app, post("/add-bill", addBill);
+app.post("/add-bill", addBill);
 app.get("/", (req, res) => {
   res.render("home");
 });
