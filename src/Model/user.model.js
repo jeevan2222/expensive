@@ -1,5 +1,6 @@
 const sequelize = require("../dbconnection/db");
 const User = require("../schema/userTable");
+const jwt = require("jsonwebtoken");
 const sendEmailVerificationCode = require("../utils/sendmail");
 
 const createUser = async (req, res) => {
@@ -83,4 +84,28 @@ const addBill = async (req, res) => {
   }
 };
 
-module.exports = { createUser, verifyEmail, addBill };
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = User.findOne({ where: { email: email } });
+    if (user) {
+      let token = jwt.sign({ email: email }, "shhhhh");
+      console.log("token>>>>>>>>>>>", token);
+      res.send({
+        error: false,
+        message: "User login Success",
+        access_token: token,
+      });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+const dashboard = async (req, res) => {
+  const { userid, email } = req.body;
+  res.send("Hi Im From DashBoard");
+};
+
+module.exports = { createUser, verifyEmail, addBill, loginUser, dashboard };

@@ -3,21 +3,32 @@ const app = express();
 const port = 4321;
 const ejs = require("ejs");
 const path = require("path");
+const { verifyToken } = require("./utils/requiredtoken");
 const cors = require("cors");
+
 require("dotenv").config();
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 const sequelize = require("../src/dbconnection/db");
-const { verifyEmail, createUser, addBill } = require("./Model/user.model");
+const {
+  verifyEmail,
+  createUser,
+  addBill,
+  loginUser,
+  dashboard,
+} = require("./Model/user.model");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// myStore.sync();
 app.post("/create", createUser);
+app.post("/login", loginUser);
 app.get("/verificationEmail", verifyEmail);
 app.post("/add-bill", addBill);
+app.post("/dashboard", verifyToken, dashboard);
 app.get("/", (req, res) => {
   res.render("home");
 });
