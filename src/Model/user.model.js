@@ -86,11 +86,11 @@ const addBill = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
+    const { email, password,role } = req.body;
+   
     const user = User.findOne({ where: { email: email } });
     if (user) {
-      let token = jwt.sign({ email: email }, "shhhhh");
+      let token = jwt.sign({ email: email,UserRole:role }, "shhhhh");
       console.log("token>>>>>>>>>>>", token);
       res.send({
         error: false,

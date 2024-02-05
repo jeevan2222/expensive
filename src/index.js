@@ -3,7 +3,7 @@ const app = express();
 const port = 4321;
 const ejs = require("ejs");
 const path = require("path");
-const { verifyToken } = require("./utils/requiredtoken");
+const { verifyAdminToken ,verifyToken} = require("./utils/requiredtoken");
 const cors = require("cors");
 
 require("dotenv").config();
@@ -27,8 +27,9 @@ app.set("views", path.join(__dirname, "views"));
 app.post("/create", createUser);
 app.post("/login", loginUser);
 app.get("/verificationEmail", verifyEmail);
-app.post("/add-bill", addBill);
-app.post("/dashboard", verifyToken, dashboard);
+app.post("/add-bill",verifyToken, addBill);
+app.post("/dashboard", verifyAdminToken, dashboard);
+
 app.get("/", (req, res) => {
   res.render("home");
 });
