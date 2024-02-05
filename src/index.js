@@ -5,6 +5,7 @@ const ejs = require("ejs");
 const path = require("path");
 const { verifyAdminToken ,verifyToken} = require("./utils/requiredtoken");
 const cors = require("cors");
+const {validateRequest} = require("./utils/validation")
 
 require("dotenv").config();
 const bodyParser = require("body-parser");
@@ -24,7 +25,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // myStore.sync();
-app.post("/create", createUser);
+app.post("/create",validateRequest ,createUser);
 app.post("/login", loginUser);
 app.get("/verificationEmail", verifyEmail);
 app.post("/add-bill",verifyToken, addBill);
