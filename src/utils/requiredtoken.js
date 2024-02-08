@@ -10,6 +10,7 @@ const verifyAdminToken = async (req, res, next) => {
       console.log(">>>>>>>>>>>>>>>>>>", decoded);
       if (decoded.UserRole == "admin") {
         req.token = bearerToken;
+        req.body["user"] = decoded;
         next();
       } else {
         res.status(403).send("You don't have permission to ");

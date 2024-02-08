@@ -109,29 +109,74 @@ const loginUser = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  const { userid, email } = req.body;
-  res.send("Hi Im From DashBoard");
-};
-const createGroup = async (req, res) => {
-  const { name, strength, user } = req.body;
-  const { id } = user;
-  const findUser = await User.findOne({ where: { id: id } });
-  console.log(!findUser);
-  const group = await Group.create({
-    name: name,
-    strength: strength,
-    user_id: id,
-  });
+  try {
+    const { user } = req.body;
+    const { id } = user;
 
-  if (group.dataValues) {
-    res.send({
-      error: false,
-      message: "group created successfully",
-      data: group,
+    const dashboardDetails = await User.findAll({
+      where: { id: id },
+      include: [{
+        model: Group,
+        where: { status: 1 },
+        required: false,
+        attributes: ['id', 'name', 'strength'],
+        through: {
+          // prevent data from relationship table
+          attributes: [],
+        },
+      }]
+    });
+
+    // Sending proper structured response
+    res.status(200).send({
+      message: "Dashboard details fetched successfully",
+      dashboardDetails: dashboardDetails
+    });
+
+  } catch (error) {
+    // Handling errors more gracefully
+    res.status(500).send({
+      error: true,
+      message: "Failed to fetch dashboard details",
+      details: error.message
     });
   }
 };
+const createGroup = async (req, res) => {
+  try {
+    const { name, strength, user } = req.body;
+    const { id } = user;
 
+    const findUser = await User.findOne({ where: { id: id } });
+
+    if (!findUser) {
+      return res.status(404).send({
+        error: true,
+        message: "User not found"
+      });
+    }
+
+    const group = await Group.create({
+      name: name,
+      strength: strength,
+      user_id: id,
+    });
+
+    if (group) {
+      return res.send({
+        error: false,
+        message: "Group created successfully"
+      });
+    } else {
+      return res.status(500).send({
+        error: true,
+        message: "Failed to create group"
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+}
 const invite = async (req, res) => {
   console.log("re>>>>>>>>>>>.", req.body);
   res.send("Hi Im From DashBoard");

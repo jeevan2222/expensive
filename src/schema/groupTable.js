@@ -6,9 +6,10 @@ const Group = sequelize.define("group", {
   user_id: DataTypes.TEXT,
   name: DataTypes.TEXT,
   strength: DataTypes.TEXT,
-});
+},{ tableName: 'groups' });
 
-User.belongsToMany(Group, { through: "UserGroup", foreignKey: "user_id" });
-Group.belongsToMany(User, { through: "UserGroup", foreignKey: "group_id" });
+User.belongsToMany(Group, { through: "Group", foreignKey: "user_id" });
+Group.belongsToMany(User, { through: "User", foreignKey: "group_id" });
+
 
 module.exports = Group;
