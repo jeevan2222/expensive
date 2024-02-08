@@ -3,9 +3,9 @@ const app = express();
 const port = 4321;
 const ejs = require("ejs");
 const path = require("path");
-const { verifyAdminToken ,verifyToken} = require("./utils/requiredtoken");
+const { verifyAdminToken, verifyToken } = require("./utils/requiredtoken");
 const cors = require("cors");
-const {validateRequest} = require("./utils/validation")
+const { validateRequest } = require("./utils/validation");
 
 require("dotenv").config();
 const bodyParser = require("body-parser");
@@ -19,17 +19,21 @@ const {
   addBill,
   loginUser,
   dashboard,
+  createGroup,
+  invite,
 } = require("./Model/user.model");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // myStore.sync();
-app.post("/create",validateRequest ,createUser);
+app.post("/create", validateRequest, createUser);
 app.post("/login", loginUser);
 app.get("/verificationEmail", verifyEmail);
-app.post("/add-bill",verifyToken, addBill);
+app.post("/add-bill", verifyToken, addBill);
 app.post("/dashboard", verifyAdminToken, dashboard);
+app.post("/creategroup", verifyToken, createGroup);
+app.post("/creategroup", verifyToken, invite);
 
 app.get("/", (req, res) => {
   res.render("home");

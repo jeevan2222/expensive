@@ -1,5 +1,6 @@
 const sequelize = require("../dbconnection/db");
 const User = require("../schema/userTable");
+const Group = require("../schema/groupTable");
 const jwt = require("jsonwebtoken");
 const sendEmailVerificationCode = require("../utils/sendmail");
 
@@ -86,11 +87,15 @@ const addBill = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { email, password,role } = req.body;
-   
-    const user = User.findOne({ where: { email: email } });
-    if (user) {
-      let token = jwt.sign({ email: email,UserRole:role }, "shhhhh");
+    const { email, password, role } = req.body;
+
+    const user = await User.findOne({ where: { email: email } });
+    console.log("user>>>>>>>>>>>>>>>>>>>", user.dataValues);
+    if (user.dataValues) {
+      let token = jwt.sign(
+        { id: user.dataValues.id, UserRole: role },
+        "shhhhh"
+      );
       console.log("token>>>>>>>>>>>", token);
       res.send({
         error: false,
@@ -107,5 +112,36 @@ const dashboard = async (req, res) => {
   const { userid, email } = req.body;
   res.send("Hi Im From DashBoard");
 };
+const createGroup = async (req, res) => {
+  const { name, strength, user } = req.body;
+  const { id } = user;
+  const findUser = await User.findOne({ where: { id: id } });
+  console.log(!findUser);
+  const group = await Group.create({
+    name: name,
+    strength: strength,
+    user_id: id,
+  });
 
-module.exports = { createUser, verifyEmail, addBill, loginUser, dashboard };
+  if (group.dataValues) {
+    res.send({
+      error: false,
+      message: "group created successfully",
+      data: group,
+    });
+  }
+};
+
+const invite = async (req, res) => {
+  console.log("re>>>>>>>>>>>.", req.body);
+  res.send("Hi Im From DashBoard");
+};
+module.exports = {
+  createUser,
+  verifyEmail,
+  addBill,
+  loginUser,
+  dashboard,
+  createGroup,
+  invite,
+};

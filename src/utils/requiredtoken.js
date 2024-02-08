@@ -5,16 +5,15 @@ const verifyAdminToken = async (req, res, next) => {
     const bearerHeader = req.headers["authorization"];
     if (typeof bearerHeader !== "undefined") {
       const bearerToken = bearerHeader.split(" ")[1];
-      console.log(">>>>>>>>>>>>>>>>>>", bearerToken);
+
       let decoded = await jwt.verify(bearerToken, "shhhhh");
-      if(decoded.UserRole=="admin"){
+      console.log(">>>>>>>>>>>>>>>>>>", decoded);
+      if (decoded.UserRole == "admin") {
         req.token = bearerToken;
         next();
-      }else{
-        res.status(403).send("You don't have permission to ")
+      } else {
+        res.status(403).send("You don't have permission to ");
       }
-     
-     
     } else {
       res.status(401).send("Not logged-in");
     }
@@ -31,14 +30,13 @@ const verifyToken = async (req, res, next) => {
       console.log(">>>>>>>>>>>>>>>>>>", bearerToken);
       let decoded = await jwt.verify(bearerToken, "shhhhh");
       console.log(">>>>>>>>>>>>>>>>>>", decoded);
-      if(decoded.UserRole=="admin" ||decoded.UserRole=="employee"){
+      if (decoded.UserRole == "admin" || decoded.UserRole == "employee") {
         req.token = bearerToken;
+        req.body["user"] = decoded;
         next();
-      }else{
-        res.status(403).send("You don't have permission to ")
+      } else {
+        res.status(403).send("You don't have permission to ");
       }
-     
-     
     } else {
       res.status(401).send("Not logged-in");
     }
@@ -48,8 +46,7 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-
 module.exports = {
   verifyAdminToken,
-  verifyToken
+  verifyToken,
 };

@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const sendEmailVerificationCode = (email, otp, next) => {
+const sendEmailVerificationCode = (email, otp = null, next = null) => {
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
