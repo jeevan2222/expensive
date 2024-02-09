@@ -33,11 +33,23 @@ app.get("/verificationEmail", verifyEmail);
 app.post("/add-bill", verifyToken, addBill);
 app.post("/dashboard", verifyAdminToken, dashboard);
 app.post("/creategroup", verifyToken, createGroup);
-app.post("/creategroup", verifyToken, invite);
+app.post("/invite", invite);
 
 app.get("/", (req, res) => {
   res.render("home");
 });
+
+app.use(function (req, res, next) {
+  next(
+  res.status(404).json({
+    status: 404,
+    error: true,
+    message: 'No Such URL',
+    data: null,
+  }));
+});
+
+
 
 app.listen(port, () => {
   console.log("Server running on port", port);

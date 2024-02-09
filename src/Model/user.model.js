@@ -177,7 +177,14 @@ const createGroup = async (req, res) => {
     return res.status(500).send({ error: error.message });
   }
 }
-const invite = async (req, res) => {
+const invite = async (req, res,next) => {
+
+  const {email} = req.body
+  sendEmailVerificationCode(email)
+
+
+
+
   console.log("re>>>>>>>>>>>.", req.body);
   res.send("Hi Im From DashBoard");
 };
