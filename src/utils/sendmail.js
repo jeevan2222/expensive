@@ -17,16 +17,15 @@ const sendEmailVerificationCode = (email, otp = null, next = null) => {
   if (otp) {
     mailOptions.subject = "Email Verification Code";
     mailOptions.html = `<p>Your OTP   <b>${otp} </b></p>`; // plain text body // Subject line
-  }else{
-    mailOptions.link="http//localhost:1234"
-    
+  } else {
+    mailOptions.link = "http//localhost:1234";
   }
 
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) console.log(err);
     else {
       console.log("email sent successfully");
-       next();
+      next();
     }
   });
 };

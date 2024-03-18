@@ -7,10 +7,14 @@ const sendEmailVerificationCode = require("../utils/sendmail");
 const createUser = async (req, res) => {
   const { name, email, password } = req.body;
   const otp = Math.floor(1000 + Math.random() * 9000);
+  if (!name && !email && !password) {
+    res.send({
+      error: 200,
+      message: "something went wrong",
+    });
+  }
 
   const verificationCode = await sendEmailVerificationCode(email, otp);
-  console.log("ver>>>>>>>>>>>>>>", verificationCode);
-
   const jane = await User.create({
     name: name,
     email: email,
@@ -87,6 +91,7 @@ const addBill = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
+    console.log(">>>>>>>", req.body);
     const { email, password, role } = req.body;
 
     const user = await User.findOne({ where: { email: email } });
@@ -94,7 +99,7 @@ const loginUser = async (req, res) => {
     if (user.dataValues) {
       let token = jwt.sign(
         { id: user.dataValues.id, UserRole: role },
-        "shhhhh"
+        process.env.key
       );
       console.log("token>>>>>>>>>>>", token);
       res.send({
@@ -115,30 +120,30 @@ const dashboard = async (req, res) => {
 
     const dashboardDetails = await User.findAll({
       where: { id: id },
-      include: [{
-        model: Group,
-        where: { status: 1 },
-        required: false,
-        attributes: ['id', 'name', 'strength'],
-        through: {
-          // prevent data from relationship table
-          attributes: [],
+      include: [
+        {
+          model: Group,
+          where: { status: 1 },
+          required: false,
+          attributes: ["id", "name", "strength"],
+          through: {
+            attributes: [],
+          },
         },
-      }]
+      ],
     });
 
     // Sending proper structured response
     res.status(200).send({
       message: "Dashboard details fetched successfully",
-      dashboardDetails: dashboardDetails
+      dashboardDetails: dashboardDetails,
     });
-
   } catch (error) {
     // Handling errors more gracefully
     res.status(500).send({
       error: true,
       message: "Failed to fetch dashboard details",
-      details: error.message
+      details: error.message,
     });
   }
 };
@@ -152,7 +157,7 @@ const createGroup = async (req, res) => {
     if (!findUser) {
       return res.status(404).send({
         error: true,
-        message: "User not found"
+        message: "User not found",
       });
     }
 
@@ -165,25 +170,21 @@ const createGroup = async (req, res) => {
     if (group) {
       return res.send({
         error: false,
-        message: "Group created successfully"
+        message: "Group created successfully",
       });
     } else {
       return res.status(500).send({
         error: true,
-        message: "Failed to create group"
+        message: "Failed to create group",
       });
     }
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
-}
-const invite = async (req, res,next) => {
-
-  const {email} = req.body
-  sendEmailVerificationCode(email)
-
-
-
+};
+const invite = async (req, res, next) => {
+  const { email } = req.body;
+  sendEmailVerificationCode(email);
 
   console.log("re>>>>>>>>>>>.", req.body);
   res.send("Hi Im From DashBoard");

@@ -5,7 +5,8 @@ const ejs = require("ejs");
 const path = require("path");
 const { verifyAdminToken, verifyToken } = require("./utils/requiredtoken");
 const cors = require("cors");
-const { validateRequest } = require("./utils/validation");
+const { validateRequest, authentication } = require("./utils/validation");
+const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 const bodyParser = require("body-parser");
@@ -29,10 +30,10 @@ app.set("views", path.join(__dirname, "views"));
 // myStore.sync();
 app.post("/create", validateRequest, createUser);
 app.post("/login", loginUser);
-app.get("/verificationEmail", verifyEmail);
-app.post("/add-bill", verifyToken, addBill);
-app.post("/dashboard", verifyAdminToken, dashboard);
-app.post("/creategroup", verifyToken, createGroup);
+app.get("/verificationEmail", authentication, verifyEmail);
+app.post("/add-bill", authentication, verifyToken, addBill);
+app.post("/dashboard", authentication, verifyAdminToken, dashboard);
+app.post("/creategroup", authentication, verifyToken, createGroup);
 app.post("/invite", invite);
 
 app.get("/", (req, res) => {
@@ -41,15 +42,14 @@ app.get("/", (req, res) => {
 
 app.use(function (req, res, next) {
   next(
-  res.status(404).json({
-    status: 404,
-    error: true,
-    message: 'No Such URL',
-    data: null,
-  }));
+    res.status(404).json({
+      status: 404,
+      error: true,
+      message: "No Such URL",
+      data: null,
+    })
+  );
 });
-
-
 
 app.listen(port, () => {
   console.log("Server running on port", port);
