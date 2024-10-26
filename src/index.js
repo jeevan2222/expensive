@@ -13,7 +13,7 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+// app.use(cors());
 const sequelize = require("../src/dbconnection/db");
 const {
   verifyEmail,
@@ -25,6 +25,13 @@ const {
   invite,
   getMoney
 } = require("./Model/user.model");
+// Define the CORS options
+const corsOptions = {
+  credentials: true,
+  origin: ['https://expensive-lgia.onrender.com']
+};
+
+app.use(cors(corsOptions)); // Use the cors middleware with your options
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
