@@ -10,6 +10,11 @@ const User = sequelize.define("user", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  role: {
+    type: DataTypes.ENUM,
+    values: ['reader', 'writer', 'administrator'],
+  }
 });
-
+//  sequelize.sync({ force: true });
+console.log('All models were synchronized successfully.');
 module.exports = User;

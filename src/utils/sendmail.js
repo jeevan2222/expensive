@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-
 const sendEmailVerificationCode = (email, otp = null, next = null) => {
   var transporter = nodemailer.createTransport({
     service: "gmail",
@@ -8,21 +7,23 @@ const sendEmailVerificationCode = (email, otp = null, next = null) => {
       pass: "aora lfje anli ajnp",
     },
   });
-
   const mailOptions = {
-    from: "jeevantest64@gmail.com", // sender address
-    to: email, // list of receivers
+    from: "jeevantest64@gmail.com", 
+    to: email, 
   };
-
   if (otp) {
     mailOptions.subject = "Email Verification Code";
-    mailOptions.html = `<p>Your OTP   <b>${otp} </b></p>`; // plain text body // Subject line
+    mailOptions.html = `<p>Your OTP   <b>${otp} </b></p>`;
   } else {
     mailOptions.link = "http//localhost:1234";
   }
-
   transporter.sendMail(mailOptions, function (err, info) {
-    if (err) console.log(err);
+    if (err){
+      return{
+      error: 502,
+      message:"Bad Gateway"
+      }
+    } 
     else {
       console.log("email sent successfully");
       next();
