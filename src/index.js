@@ -11,8 +11,7 @@ const {getAmountInfo}=require("./Model/invitation.model");
 const cron = require('node-cron')
 require("dotenv").config();
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+
 // app.use(cors());
 const sequelize = require("../src/dbconnection/db");
 const {
@@ -25,14 +24,12 @@ const {
   invite,
   getMoney
 } = require("./Model/user.model");
-// Define the CORS options
 const corsOptions = {
-  credentials: true,
-  origin: ['https://expensive-lgia.onrender.com']
+  origin: ["https://moneytracker-w6ic.onrender.com", "http://localhost:3000","https://expensive-lgia.onrender.com","http://localhost:3000"],
 };
-
-app.use(cors(corsOptions)); // Use the cors middleware with your options
-
+app.use(cors(corsOptions));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -63,10 +60,10 @@ app.use(function (req, res, next) {
 // });
 
 
-//its runs every data at 6 AM
-// cron.schedule("0 6 * * *", () => {
-//   getAmountInfo();
-// });
+// its runs every data at 6 AM
+cron.schedule("0 6 * * *", () => {
+  getAmountInfo();
+});
 
 // cron.schedule("*/3 * * * * *", () => {
 //   console.log("Task is running every 3 seconds");
