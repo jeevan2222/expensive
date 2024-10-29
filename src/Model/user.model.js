@@ -1,38 +1,39 @@
 const sequelize = require("../dbconnection/db");
 const User = require("../schema/userTable");
 const Group = require("../schema/groupTable");
-const MoneyData=require("../schema/amountTrack");
+const MoneyData = require("../schema/amountTrack");
 const jwt = require("jsonwebtoken");
 const sendEmailVerificationCode = require("../utils/sendmail");
 
 const createUser = async (req, res) => {
-try {
-  const { name, email, password,role } = req.body;
-  console.log(name,email,password,role);
-  if (!name && !email && !password && !role )  {
+  try {
+    req.body.read = "reader";
+    const { name, email, password, role } = req.body;
+    console.log(name, email, password, role);
+    if (!name && !email && !password && !role) {
+      res.send({
+        error: 400,
+        message: "Bad Request",
+      });
+    }
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    const jane = await User.create({
+      name: name,
+      email: email,
+      password: password,
+      otp: otp,
+      role: role,
+      isemailverified: false,
+    });
+    await sendEmailVerificationCode(email, otp);
+    res.send({ Status: 201, message: "User  Created Successfully" });
+  } catch (error) {
+    console.log("errror", error);
     res.send({
-      error: 400,
-      message: "Bad Request",
+      error: 500,
+      message: "Internal Server Error",
     });
   }
-  const otp = Math.floor(1000 + Math.random() * 9000);
-  const jane = await User.create({
-    name: name,
-    email: email,
-    password: password,
-    otp: otp,
-    role:role,
-    isemailverified: false,
-  });
-  await sendEmailVerificationCode(email, otp);
-  res.send(jane);
-} catch (error) {
-  console.log("errror",error)
-  res.send({
-    error: 500,
-    message: "Internal Server Error"
-  })
-}
 };
 
 const verifyEmail = async (req, res) => {
@@ -104,24 +105,23 @@ const loginUser = async (req, res) => {
     console.log("user>>>>>>>>>>>>>>>>>>>", user);
     // Verify password
 
-    console.log("password",user?.dataValues.password)
-    const passwordValid = user?.dataValues.password===password;
+    console.log("password", user?.dataValues.password);
+    const passwordValid = user?.dataValues.password === password;
     if (!passwordValid) {
-        return res.status(404).json(
-         { status:404,
-          message:'Incorrect  password'
-        })
-      }
+      return res
+        .status(404)
+        .json({ status: 404, message: "Incorrect  password" });
+    }
     if (user?.dataValues) {
       res.send({
         error: 201,
         message: "User login Success",
       });
-    }else
-    res.send({
-      error: 404,
-      message: "User Not Found",
-    })
+    } else
+      res.send({
+        error: 404,
+        message: "User Not Found",
+      });
   } catch (error) {
     res.send(error);
   }
@@ -212,14 +212,14 @@ const getMoney = async (req, res) => {
       error: true,
       message: "Invalid email address",
     });
-  } ;
-    res.send({
-      status: 200,
-      error: false,
-      message: "Fetched successfully",
-      data:user
-    });
   }
+  res.send({
+    status: 200,
+    error: false,
+    message: "Fetched successfully",
+    data: user,
+  });
+};
 module.exports = {
   createUser,
   verifyEmail,
@@ -228,5 +228,5 @@ module.exports = {
   dashboard,
   createGroup,
   invite,
-  getMoney
+  getMoney,
 };
