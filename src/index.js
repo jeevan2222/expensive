@@ -55,9 +55,9 @@ app.use(function (req, res, next) {
     })
   );
 });
-cron.schedule("*/30 * * * * *", () => {
-  getAmountInfo();
-});
+// cron.schedule("*/30 * * * * *", () => {
+//   getAmountInfo();
+// });
 
 
 // its runs every data at 6 AM
