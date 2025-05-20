@@ -1,15 +1,23 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize('mymoneytracker', 'mymoneytracker_user', 'otIbgQngZh9vEfJvT6Ne0K1JYyN2lnCx', {
-  host: 'dpg-cseg30rtq21c738b6m3g-a.oregon-postgres.render.com',
+const sequelize = new Sequelize('test', 'postgres', 'admin12', {
+  host: 'localhost',
   dialect: 'postgres',
   dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
+    // ssl: {
+    //   require: true,
+    //   rejectUnauthorized: false,
+    // },
   },
 });
+
+
+// DATABASE_NAME="test"
+// PASSWORD="admin21"
+// DATABASE_PORT="5432"
+// USERNAME="postgres"
+// HOSTNAME="localhost"
+// key="shhhhh"
 
 sequelize.authenticate()
   .then(() => {
